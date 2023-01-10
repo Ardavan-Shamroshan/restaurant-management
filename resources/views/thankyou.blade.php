@@ -1,6 +1,6 @@
 <x-guest-layout>
     <div class="container w-full px-5 py-6 mx-auto">
-        <h1>Thank you</h1>
-        <p>You reservation is ready.</p>
+        <h1>سپاسگزارم</h1>
+        <p>رزرو شما آماده است!</p>
     </div>
 </x-guest-layout>

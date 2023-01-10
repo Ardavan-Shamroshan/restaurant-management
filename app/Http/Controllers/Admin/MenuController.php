@@ -41,12 +41,12 @@ class MenuController extends Controller
      */
     public function store(MenuStoreRequest $request)
     {
-        $image = $request->file('image')->store('public/menus');
+        $image = $request->file('image')->store('menus',  ['disk' => 'public']);
 
         $menu = Menu::create([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $image,
+            'image' => 'images' . DIRECTORY_SEPARATOR . $image,
             'price' => $request->price
         ]);
 
@@ -54,7 +54,7 @@ class MenuController extends Controller
             $menu->categories()->attach($request->categories);
         }
 
-        return to_route('admin.menus.index')->with('success', 'Menu created successfully.');
+        return to_route('admin.menus.index')->with('success', 'منو با موفقیت ثبت شد');
     }
 
 
@@ -86,21 +86,21 @@ class MenuController extends Controller
         ]);
         $image = $menu->image;
         if ($request->hasFile('image')) {
-            Storage::delete($menu->image);
-            $image = $request->file('image')->store('public/menus');
+            unlink($menu->image);
+            $image = $request->file('image')->store('menus',  ['disk' => 'public']);
         }
 
         $menu->update([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $image,
+            'image' => 'images' . DIRECTORY_SEPARATOR . $image,
             'price' => $request->price
         ]);
 
         if ($request->has('categories')) {
             $menu->categories()->sync($request->categories);
         }
-        return to_route('admin.menus.index')->with('success', 'Menu updated successfully.');
+        return to_route('admin.menus.index')->with('success', 'منو با موفقیت ویرایش شد');
     }
 
     /**
@@ -114,6 +114,6 @@ class MenuController extends Controller
         Storage::delete($menu->image);
         $menu->categories()->detach();
         $menu->delete();
-        return to_route('admin.menus.index')->with('danger', 'Menu deleted successfully.');
+        return to_route('admin.menus.index')->with('danger', 'منو با موفقیت حذف شد');
     }
 }

@@ -44,17 +44,17 @@ class ReservationController extends Controller
     {
         $table = Table::findOrFail($request->table_id);
         if ($request->guest_number > $table->guest_number) {
-            return back()->with('warning', 'Please choose the table base on guests.');
+            return back()->with('warning', 'لطفا یک میز به تعداد میهمانان خود انتخاب کنید');
         }
         $request_date = Carbon::parse($request->res_date);
         foreach ($table->reservations as $res) {
             if ($res->res_date->format('Y-m-d') == $request_date->format('Y-m-d')) {
-                return back()->with('warning', 'This table is reserved for this date.');
+                return back()->with('warning', 'میز برای این تاریخ رزرو شده است');
             }
         }
         Reservation::create($request->validated());
 
-        return to_route('admin.reservations.index')->with('success', 'Reservation created successfully.');
+        return to_route('admin.reservations.index')->with('success', 'رزرو با موفقیت ایجاد شد');
     }
 
     /**
@@ -91,18 +91,18 @@ class ReservationController extends Controller
     {
         $table = Table::findOrFail($request->table_id);
         if ($request->guest_number > $table->guest_number) {
-            return back()->with('warning', 'Please choose the table base on guests.');
+            return back()->with('warning', 'لطفا یک میز به تعداد میهمانان خود انتخاب کنید');
         }
         $request_date = Carbon::parse($request->res_date);
         $reservations = $table->reservations()->where('id', '!=', $reservation->id)->get();
         foreach ($reservations as $res) {
             if ($res->res_date->format('Y-m-d') == $request_date->format('Y-m-d')) {
-                return back()->with('warning', 'This table is reserved for this date.');
+                return back()->with('warning', 'میز برای این تاریخ رزرو شده است');
             }
         }
 
         $reservation->update($request->validated());
-        return to_route('admin.reservations.index')->with('success', 'Reservation updated successfully.');
+        return to_route('admin.reservations.index')->with('success', 'رزرو با موفقیت ایجاد شد');
     }
 
     /**
@@ -115,6 +115,6 @@ class ReservationController extends Controller
     {
         $reservation->delete();
 
-        return to_route('admin.reservations.index')->with('warning', 'Reservation deleted successfully.');
+        return to_route('admin.reservations.index')->with('warning', 'رزرو با موفقیت ثبت شد');
     }
 }

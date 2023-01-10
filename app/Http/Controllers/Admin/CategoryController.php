@@ -39,15 +39,15 @@ class CategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request)
     {
-        $image = $request->file('image')->store('public/categories');
+        $image = $request->file('image')->store('categories',  ['disk' => 'public']);
 
         Category::create([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $image
+            'image' => 'images' . DIRECTORY_SEPARATOR . $image
         ]);
 
-        return to_route('admin.categories.index')->with('success', 'Category created successfully.');
+        return to_route('admin.categories.index')->with('success', 'دسته بندی با موفقیت ثبت شد');
     }
 
     /**
@@ -87,16 +87,16 @@ class CategoryController extends Controller
         ]);
         $image = $category->image;
         if ($request->hasFile('image')) {
-            Storage::delete($category->image);
-            $image = $request->file('image')->store('public/categories');
+            unlink($category->image);
+            $image = $request->file('image')->store('categories',  ['disk' => 'public']);
         }
 
         $category->update([
             'name' => $request->name,
             'description' => $request->description,
-            'image' => $image
+            'image' => 'images' . DIRECTORY_SEPARATOR . $image
         ]);
-        return to_route('admin.categories.index')->with('success', 'Category updated successfully.');
+        return to_route('admin.categories.index')->with('success', 'دسته بندی با موفقیت ویرایش شد');
     }
 
     /**
@@ -111,6 +111,6 @@ class CategoryController extends Controller
         $category->menus()->detach();
         $category->delete();
 
-        return to_route('admin.categories.index')->with('danger', 'Category deleted successfully.');
+        return to_route('admin.categories.index')->with('danger', 'دسته بندی با موفقیت حذف شد');
     }
 }
