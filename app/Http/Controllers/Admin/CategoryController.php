@@ -87,7 +87,9 @@ class CategoryController extends Controller
         ]);
         $image = $category->image;
         if ($request->hasFile('image')) {
-            unlink($category->image);
+            if ($category->image != 'image.png') {
+                unlink($category->image);
+            }
             $image = $request->file('image')->store('categories',  ['disk' => 'public']);
         }
 
